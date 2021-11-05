@@ -15,7 +15,7 @@ TEST_MAIN_OBJ = $(TEST_BUILD_DIR)/test.o
 TEST_MAIN_TARGET = $(TEST_TARGET_DIR)/test
 TEST_TARGET = $(filter-out $(TEST_MAIN_TARGET),$(patsubst $(TEST_SOURCE_DIR)/%.cpp, $(TEST_TARGET_DIR)/%, $(wildcard $(TEST_SOURCE_DIR)/*.cpp)))
 
-.PHONY : default test clean build
+.PHONY : default test clean build lint docs
 
 default : build
 
@@ -37,8 +37,17 @@ build: $(TARGET)
 
 test : $(TEST_TARGET)
 
+lint:
+	astyle src/*.{cpp,hpp}
+	astyle tests/*.cpp
+
+docs:
+	doxygen
+	cd docs/latex && make
+
 clean:
 	-rm $(TARGET)
 	-rm -r $(BUILD_DIR)/*
 	-rm -r $(TEST_TARGET_DIR)/*
 	-rm -r $(TEST_BUILD_DIR)/*
+	-rm -r docs/*

@@ -1,3 +1,8 @@
 build
-tests/build
+lib
 
+tests/build
+tests/bin
+
+docs/latex/
+!docs/latex/refman.pdf
