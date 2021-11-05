@@ -1,0 +1,62 @@
+CXXFLAGS += {{conf.CXXFLAGS}}
+
+MODULE_DIR = {{conf.MODULE_DIR}}
+STD_MODULE_DIR = {{conf.STD_MODULE_DIR}}
+SOURCE_DIR = src
+BUILD_DIR = build
+LIB_DIR = lib
+
+MODULE_SOURCE = $(SOURCE_DIR)/dyno.cpp
+MODULE_OBJECT = $(BUILD_DIR)/dyno.o
+TARGET = $(LIB_DIR)/dyno.a
+
+TEST_SOURCE_DIR = tests
+TEST_BUILD_DIR = tests/build
+TEST_TARGET_DIR = tests/bin
+
+TEST_TARGET = $(patsubst $(TEST_SOURCE_DIR)/%.cpp, $(TEST_TARGET_DIR)/%, $(wildcard $(TEST_SOURCE_DIR)/*.cpp))
+
+.PHONY : default test clean build
+	
+	.EXTRA_PREREQS = Makefile
+
+default : build
+
+$(TARGET) : $(MODULE_OBJECT)
+	ar rcs $@ $^ {{' '.join(obj_list)}}
+
+{% for module in modules %}
+{{module.path}} {{module.object}} : {{module.source}} {{' '.join(module.dependencies.modules + module.dependencies.std)}} 
+	$(CXX) $(CXXFLAGS) -c $< -o $(patsubst $(SOURCE_DIR)/%.cpp, $(BUILD_DIR)/%.o, $<)
+{% endfor %}
+
+{% for header in std_headers %}
+{{header.path}} :
+	$(CXX) $(CXXFLAGS) -x c++-system-header {{header.name}}
+{% endfor %}
+
+{% for test in tests %}
+{{test.object}} : {{test.source}} {{' '.join(test.dependencies.modules + test.dependencies.std)}}
+	$(CXX) $(CXXFLAGS) -c $< -o $@ 
+{% endfor %}
+
+{% for test in tests %}
+{{test.bin}} : {{test.object}} $(TARGET)
+	$(CXX) $(CXXFLAGS) $^ -o $@ 
+	@echo TEST $@
+	@./$@
+{% endfor %}
+
+Makefile : configure.py
+	./configure.py
+	$(MAKE) $(MAKECMDGOALS)
+
+build: $(TARGET)
+
+test : $(TEST_TARGET)
+
+clean:
+	rm -rf $(MODULE_DIR)
+	rm -rf $(BUILD_DIR)/*
+	rm -rf $(TEST_TARGET_DIR)/*
+	rm -rf $(TEST_BUILD_DIR)/*
