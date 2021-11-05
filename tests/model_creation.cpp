@@ -1,8 +1,8 @@
-import <iostream>;
+#include <catch2/catch.hpp>
 
-import dyno;
+#include "dyno.hpp"
 
-int main(){
+TEST_CASE("Model creation") {
     dyno::Model m {"model"};
-    std::cout << m.name << std::endl;
-};
+    REQUIRE(m.name == "model");
+}
