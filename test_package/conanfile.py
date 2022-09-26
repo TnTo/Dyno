@@ -12,7 +12,8 @@ class PkgTest(ConanFile):
 
     def build(self):
         test = "--test" if (self.options.test) else ''
-        debug = "--debug-mode" if (self.settings.build_type == "Debug") else ''
+        debug = "--debug-build" if (self.settings.build_type ==
+                                    "Debug") else ''
         self.run('scons -C {} -j {} {} {}'.format(self.source_folder,
                  int(mp.cpu_count() * 1.5), test, debug))
 

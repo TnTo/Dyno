@@ -28,7 +28,8 @@ class Pkg(ConanFile):
 
     def build(self):
         test = "--test" if (self.options.test) else ''
-        debug = "--debug-mode" if (self.settings.build_type == "Debug") else ''
+        debug = "--debug-build" if (self.settings.build_type ==
+                                    "Debug") else ''
         tools.mkdir("build")
         with tools.chdir("build"):
             self.run(

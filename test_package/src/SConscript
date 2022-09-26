@@ -1,7 +1,7 @@
 import sys
 
 AddOption('--test', action='store_true', help='output coverage files')
-AddOption('--debug-mode', action='store_true', help='debug mode')
+AddOption('--debug-build', action='store_true', help='debug mode')
 
 env = Environment()
 
@@ -10,7 +10,7 @@ env.Append(CXXFLAGS=['-Wall'])
 if GetOption('test'):
     env.Append(CXXFLAGS=['--coverage'], LIBS=['gcov'])
 
-if GetOption('debug_mode'):
+if GetOption('debug_build'):
     env.Append(CXXFLAGS=['-g', '-ggdb'])
 else:
     env.Append(CXXFLAGS=['-O2'], LINKFLAGS=['-O2'])
