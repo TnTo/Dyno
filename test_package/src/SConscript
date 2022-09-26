@@ -1,8 +1,19 @@
 import sys
 
+AddOption('--test', action='store_true', help='output coverage files')
+AddOption('--debug-mode', action='store_true', help='debug mode')
+
 env = Environment()
 
-env.Append(CXXFLAGS=['-fprofile-arcs', '-ftest-coverage'], LIBS=['gcov'])
+env.Append(CXXFLAGS=['-Wall'])
+
+if GetOption('test'):
+    env.Append(CXXFLAGS=['--coverage'], LIBS=['gcov'])
+
+if GetOption('debug_mode'):
+    env.Append(CXXFLAGS=['-g', '-ggdb'])
+else:
+    env.Append(CXXFLAGS=['-O2'], LINKFLAGS=['-O2'])
 
 build_path_relative_to_sconstruct = Dir('.').path
 conan = SConscript(

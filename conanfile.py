@@ -1,4 +1,5 @@
 from conans import ConanFile, tools
+import multiprocessing as mp
 
 
 class Pkg(ConanFile):
@@ -10,8 +11,9 @@ class Pkg(ConanFile):
     url = 'https://www.github.com/TnTo/Dyno'
     settings = 'os', 'compiler', 'cppstd', 'build_type', 'arch'
     description = 'Dyno - A library for AB-SFC models'
-    options = {"shared": [True, False], "fPIC": [True, False]}
-    default_options = {"shared": False, "fPIC": True}
+    options = {"shared": [True, False], "fPIC": [
+        True, False], "test": [True, False]}
+    default_options = {"shared": False, "fPIC": True, "test": False}
     exports_sources = 'src/*'
     generators = 'scons'
 
@@ -25,15 +27,16 @@ class Pkg(ConanFile):
             self.settings.cppstd = 'gnu17'
 
     def build(self):
-        debug_opts = [
-            '--debug-build'] if self.settings.build_type == 'Debug' else []
+        test = "--test" if (self.options.test) else ''
+        debug = "--debug-mode" if (self.settings.build_type == "Debug") else ''
         tools.mkdir("build")
         with tools.chdir("build"):
             self.run(
-                ['scons', '-C', '{}/src'.format(self.source_folder)] + debug_opts)
+                ['scons', '-C', '{}/src'.format(self.source_folder), '-j', f'{int(mp.cpu_count() * 1.5)}', test, debug])
 
     def package(self):
         self.copy('*.h', 'include', src='src')
+        self.copy('*.h', 'include/Dyno', src='src/Dyno')
         self.copy('*.lib', 'lib', keep_path=False)
         self.copy('*.a', 'lib', keep_path=False)
 

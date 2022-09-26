@@ -1,6 +1,7 @@
 #include <catch2/catch_all.hpp>
+
 #include "Dyno.h"
 
-int main() { 
-  return 0;
+TEST_CASE( "Test", "[test]" ) {
+    REQUIRE( 0 == 0 );
 }
