@@ -22,9 +22,9 @@ class Pkg(ConanFile):
             del self.options.fPIC
 
         if self.settings.compiler == "Visual Studio":
-            self.settings.cppstd = '17'
+            self.settings.cppstd = '20'
         else:
-            self.settings.cppstd = 'gnu17'
+            self.settings.cppstd = 'gnu20'
 
     def build(self):
         test = "--test" if (self.options.test) else ''

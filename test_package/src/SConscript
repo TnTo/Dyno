@@ -5,7 +5,7 @@ AddOption('--debug-build', action='store_true', help='debug mode')
 
 env = Environment()
 
-env.Append(CXXFLAGS=['-Wall'])
+env.Append(CXXFLAGS=['-Wall', '-std=c++20'])
 
 if GetOption('test'):
     env.Append(CXXFLAGS=['--coverage'], LIBS=['gcov'])
