@@ -1,21 +1,40 @@
-from conans import ConanFile
+from conans import ConanFile, tools
+from conan.tools.cmake import CMake, CMakeToolchain, CMakeDeps, cmake_layout
 import os
-import multiprocessing as mp
 
 
 class PkgTest(ConanFile):
-    settings = 'os', 'compiler', 'build_type', 'arch', 'build_type'
+    settings = 'os', 'compiler', 'build_type', 'arch'
     requires = ['Dyno/0.0.1', 'catch2/3.1.0']
-    options = {"test": [True, False]}
-    default_options = {"test": True}
-    generators = 'scons'
+
+    def config_options(self):
+        if self.settings.compiler == "Visual Studio":
+            self.settings.compiler.cppstd = '20'
+        else:
+            self.settings.compiler.cppstd = 'gnu20'
+
+        self.settings.compiler.libcxx = "libstdc++11"
+        self.settings.build_type = 'Debug'
+
+    def layout(self):
+        cmake_layout(self, build_folder='build')
+
+    def generate(self):
+        tc = CMakeToolchain(self)
+        tc.variables['DYNO_PATH'] = self.deps_cpp_info["Dyno"].rootpath
+        tc.variables['ROOT_DIR'] = os.path.abspath(
+            os.path.join(self.source_folder, os.pardir))
+        tc.generate()
+        deps = CMakeDeps(self)
+        deps.generate()
 
     def build(self):
-        test = "--test" if (self.options.test) else ''
-        debug = "--debug-build" if (self.settings.build_type ==
-                                    "Debug") else ''
-        self.run('scons -C {} -j {} {} {}'.format(self.source_folder,
-                 int(mp.cpu_count() * 1.5), test, debug))
+        tools.mkdir('build')
+        cmake = CMake(self)
+        cmake.configure()
+        cmake.build()
 
     def test(self):
-        self.run(os.path.join('.', 'test'))
+        cmake = CMake(self)
+        cmake.configure()
+        cmake.test()
