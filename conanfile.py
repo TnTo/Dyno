@@ -1,5 +1,5 @@
-from conans import ConanFile, tools
-from conan.tools.cmake import CMake, CMakeToolchain, CMakeDeps, cmake_layout
+from conans import ConanFile
+from conan.tools.cmake import CMakeToolchain, CMakeDeps, cmake_layout
 
 
 class Pkg(ConanFile):
@@ -12,9 +12,10 @@ class Pkg(ConanFile):
     settings = 'os', 'compiler', 'build_type', 'arch'
     description = 'Dyno - A library for AB-SFC models'
     options = {"shared": [True, False], "fPIC": [
-        True, False], "test": [True, False]}
-    default_options = {"shared": False, "fPIC": True, "test": False}
+        True, False]}
+    default_options = {"shared": False, "fPIC": True}
     exports_sources = 'src/*'
+    no_copy_source = True
 
     def config_options(self):
         if self.settings.os == "Windows":
@@ -39,6 +40,3 @@ class Pkg(ConanFile):
     def package(self):
         self.copy('*.h', dst='include', src='src')
         self.copy('*.h', dst='include/Dyno', src='src/Dyno')
-
-    def package_info(self):
-        self.cpp_info.libs = ['Dyno']

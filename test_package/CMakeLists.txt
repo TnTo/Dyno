@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 3.20)
-project(DynoTest LANGUAGES CXX)
+project(DynoTest CXX)
 
 set(CMAKE_VERBOSE_MAKEFILE OFF)
 
 find_package(Catch2 REQUIRED)
+find_package(Dyno REQUIRED)
 
 find_program(GCOV_PATH gcovr)
 link_libraries(gcov)
@@ -14,7 +15,7 @@ set(CMAKE_CXX_FLAGS " ${CMAKE_CXX_FLAGS} --coverage -g3")
 
 add_executable(Dyno_test_exe src/test.cpp ${cxx_sources})
 target_link_libraries(Dyno_test_exe Catch2::Catch2WithMain)
-target_include_directories(Dyno_test_exe PUBLIC ${DYNO_PATH}/include)
+target_link_libraries(Dyno_test_exe Dyno::Dyno)
 
 make_directory(${ROOT_DIR}/coverage)
 add_custom_target(Dyno_cov

@@ -29,7 +29,6 @@ class PkgTest(ConanFile):
         deps.generate()
 
     def build(self):
-        tools.mkdir('build')
         cmake = CMake(self)
         cmake.configure()
         cmake.build()
