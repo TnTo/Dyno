@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 project(DynoTest LANGUAGES CXX)
 
-set(CMAKE_VERBOSE_MAKEFILE ON)
+set(CMAKE_VERBOSE_MAKEFILE OFF)
 
 find_package(Catch2 REQUIRED)
 
@@ -18,7 +18,7 @@ target_include_directories(Dyno_test_exe PUBLIC ${DYNO_PATH}/include)
 
 make_directory(${ROOT_DIR}/coverage)
 add_custom_target(Dyno_cov
-    ${GCOV_PATH} ${PROJECT_BINARY_DIR}/CMakeFiles/Dyno_test_exe.dir/src -r ${DYNO_PATH}/include  --html-details -o ${ROOT_DIR}/coverage/index.html -s 
+    ${GCOV_PATH} ${PROJECT_BINARY_DIR}/CMakeFiles/Dyno_test_exe.dir/src -r ${DYNO_PATH}/include  --html-details -o ${ROOT_DIR}/coverage/index.html -s --exclude-unreachable-branches --exclude-throw-branches
     DEPENDS Dyno_test)
 
 add_custom_target(Dyno_test Dyno_test_exe DEPENDS Dyno_test_exe)
