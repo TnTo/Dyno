@@ -5,6 +5,9 @@
 
 namespace Dyno {
 
+template<typename T>
+using ptr = std::weak_ptr<T>;
+
 class Agent;
 
 template<class T>
