@@ -1,7 +1,3 @@
-#include <catch2/catch_all.hpp>
-
-#include "Dyno.h"
-
-TEST_CASE( "Test", "[test]" ) {
-    REQUIRE( 0 == 0 );
-}
+#include "base_model.h"
+#include "isa.h"
+#include "unique.h"
