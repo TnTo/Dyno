@@ -1,4 +1,5 @@
 #pragma once
 
-#include "Dyno/model.h"
+#include "Dyno/Model.h"
+#include "Dyno/Stock.h"
 #include "Dyno/Agent.h"
