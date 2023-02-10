@@ -37,3 +37,4 @@ class PkgTest(ConanFile):
         cmake = CMake(self)
         cmake.configure()
         cmake.test()
+        cmake.build(target="Dyno_cov")
