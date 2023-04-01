@@ -1,10 +1,12 @@
-from conans import ConanFile
+from conan import ConanFile
+from conan.tools.files import copy
 from conan.tools.cmake import CMakeToolchain, CMakeDeps, cmake_layout
+from os.path import join
 
 
 class Pkg(ConanFile):
 
-    name = 'Dyno'
+    name = 'dyno'
     version = '0.0.1'
     license = 'MIT'
     author = "Michele Ciruzzi tnto@hotmail.it"
@@ -21,7 +23,7 @@ class Pkg(ConanFile):
         if self.settings.os == "Windows":
             del self.options.fPIC
 
-        if self.settings.compiler == "Visual Studio":
+        if self.settings.compiler == "msvc":
             self.settings.compiler.cppstd = '20'
         else:
             self.settings.compiler.cppstd = 'gnu20'
@@ -38,5 +40,5 @@ class Pkg(ConanFile):
         deps.generate()
 
     def package(self):
-        self.copy('*.h', dst='include', src='src')
-        self.copy('*.h', dst='include/Dyno', src='src/Dyno')
+        copy(self, '*.h', join(self.source_folder, "src"), join(self.package_folder, "include"))
+        print(join(self.package_folder, "include", "Dyno"))

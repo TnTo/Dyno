@@ -24,7 +24,7 @@ foreach( SRC ${SOURCES} )
     string(CONCAT TNAME "Dyno: " ${FNAME})
     add_executable( ${TARGET} ${SRC} )
     target_link_libraries( ${TARGET} Catch2::Catch2WithMain )
-    target_link_libraries( ${TARGET} Dyno::Dyno )
+    target_link_libraries( ${TARGET} dyno::dyno )
     add_test(NAME ${TNAME} COMMAND ${TARGET})
 endforeach( SRC ${SOURCES} )
 
