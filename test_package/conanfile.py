@@ -20,7 +20,7 @@ class PkgTest(ConanFile):
 
     def generate(self):
         tc = CMakeToolchain(self)
-        tc.variables['DYNO_PATH'] = self.dependencies["dyno"].recipe_folder
+        tc.variables['DYNO_PATH'] = self.dependencies["dyno"].package_folder
         tc.variables['ROOT_DIR'] = os.path.abspath(
             os.path.join(self.source_folder, os.pardir))
         tc.generate()
